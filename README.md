@@ -1,5 +1,4 @@
 # hc_deepid
-# hc_deepid
 
 A reusable Holochain identity zome, extracted from [NFB Den](https://nfb.digital)'s `account` zome, for applications that need **multi-device identity anchored to an external identity authority** (e.g. a Django/OAuth backend) rather than raw agent keys.
 
