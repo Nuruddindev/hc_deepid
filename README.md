@@ -49,7 +49,9 @@ This replaces an earlier per-agent link design (`AgentToAvatar` / `AgentToProfil
 
 ## Proven in NFB Den
 
-This isn't a theoretical design — it's the pattern currently running in [NFB Den](https://nfb.digital)'s `account` zome, validated through local development and multi-agent Tryorama testing (persistent multi-agent test environments simulating multiple devices per identity). The multi-device bug described above was real, reproduced, and fixed using exactly this `ExternalHash`-anchored approach.
+This isn't a theoretical design — it's the pattern currently running in [NFB Den](https://nfb.digital)'s `account` zome, validated there through local development and multi-agent Tryorama testing (persistent multi-agent test environments simulating multiple devices per identity). The multi-device bug described above was real, reproduced, and fixed in NFB Den using exactly this `ExternalHash`-anchored approach.
+
+`hc_deepid`, as extracted into this standalone repository, currently compiles cleanly (`cargo check` passes) but has not yet had its own Tryorama test suite re-run against the extracted code — that re-validation is planned as part of getting this repo to a stable, independently-testable state.
 
 *A demo video walking through the multi-device flow will be added here.*
 
