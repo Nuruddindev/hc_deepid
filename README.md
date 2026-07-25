@@ -10,6 +10,22 @@ In a standard Holochain hApp, each device/browser a person uses gets its own `Ag
 
 `hc_deepid` solves this by treating an **external identity ID** (in NFB Den's case, a Django user ID) as the source of truth, and anchoring shared state to it via `ExternalHash`, while still respecting Holochain's per-agent source-chain model underneath.
 
+## Why this matters for contracts: Key vs. ID
+
+The multi-device bug above is annoying for a profile picture. It's disqualifying for a legal contract.
+
+NFB Den's `pub_contract` zome records publishing contracts between authors and publishers — but the underlying problem isn't specific to publishing. Any Holochain hApp that models a legally binding agreement — a real estate purchase or lease, a vehicle sale, an employment contract, anything where "who agreed to this" has to hold up outside the DHT — needs identity to mean *the same accountable party*, consistently, regardless of which device or browser they happened to sign in from. `pub_contract` is simply the instance of this problem NFB Den had to solve first; `hc_deepid` is the general-purpose answer.
+
+If contract state is validated or resolved against `AgentPubKey`/device identity instead of a stable identity anchor, you get real risks in any of these domains:
+
+- **Signing ambiguity.** If "who signed this" resolves to a device key rather than a durable identity, a party switching devices mid-negotiation can look like a different signer, or worse, make it unclear which device's key is authoritative for a signature.
+- **Repudiation surface.** An agent key can be lost, rotated, or run on a compromised device. Without a stable identity layer above it, there's no clean way to say "this contract belongs to this person" independent of "this specific keypair happened to sign it."
+- **No continuity across key rotation.** Holochain's own key-management layer, [DeepKey](https://github.com/holochain/deepkey), solves a different problem: it tracks whether a given `AgentPubKey` is currently valid, revoked, or replaced. That's necessary but not sufficient — DeepKey answers *"is this key still good?"*, not *"which real-world accountable party has ever stood behind any of these keys?"* A contract needs the second answer.
+
+This is the distinction between **Key** and **ID**: DeepKey (and DPKI generally) is key-management infrastructure — it's about keys. `hc_deepid` is identity infrastructure — it's about the durable, external-authority-backed identity that a whole set of rotating, multiplying device keys can be traced back to. The two are complementary, not competing: a contract system — for publishing, real estate, vehicle sales, or any other domain — can use DeepKey to validate that a signing key is currently authorized, *and* use `hc_deepid` to resolve that key back to the accountable identity that must actually be bound by the contract.
+
+To be precise about what's changing: `hc_deepid` doesn't turn Holochain into something other than agent-based. The source chain, validation, and DHT all remain agent-based at the protocol level, exactly as designed. What `hc_deepid` adds is a **user-centric identity layer at the application level**, sitting on top of that agent-based foundation — the same space Holochain's own DPKI work has long flagged as needing a pluggable, delegatable identity layer, but hasn't yet filled with a reusable, production-tested implementation.
+
 ## Core pattern
 
 ```
