@@ -1,0 +1,22 @@
+# hc_deepid/zomes/coordinator/account/Cargo.toml
+[package]
+name = "account"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "account"
+
+[dependencies]
+hdk = { workspace = true }
+serde = { workspace = true }
+holochain_serialized_bytes = { workspace = true }
+account_integrity = { workspace = true }
+hex = "0.4"
+
+[dev-dependencies]
+
+
+# PENGUNCIAN ENKRIPSI JANGKAUAN LAUNCHER 0.6
+pkcs8 = "=0.11.0-rc.11"

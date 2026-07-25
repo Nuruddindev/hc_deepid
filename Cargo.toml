@@ -1,0 +1,28 @@
+# hc_deepid/Cargo.toml
+[profile.dev]
+opt-level = "z"
+
+[profile.release]
+opt-level = "z"
+
+[workspace]
+members = [
+  "zomes/integrity/account",
+  "zomes/coordinator/account"
+]
+resolver = "2"
+
+[workspace.dependencies]
+hdi = "=0.7.1"
+hdk = "=0.6.1"
+holochain_serialized_bytes = "*"
+serde = { version = "1.0", features = ["derive"] }
+hex = "0.4"
+tokio = "1.49"
+
+[workspace.dependencies.account]
+path = "zomes/coordinator/account"
+
+[workspace.dependencies.account_integrity]
+path = "zomes/integrity/account"
+
